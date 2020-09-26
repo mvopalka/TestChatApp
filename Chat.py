@@ -70,8 +70,3 @@ class Chat:
     def logout(self):
         self.id = NOT_LOGGED_IN
 
-
-a = Chat('database.sqlite')
-a.verify('admin', 'password')
-a.send_msg(2, "Nazdárek párek")
-print(a.read_msg(2))
