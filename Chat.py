@@ -29,6 +29,9 @@ class Chat:
     def close(self):
         self.conn.close()
 
+    def get_state(self):
+        return self.id != 0
+
     def verify(self, username: str, passwd_in: str):
         self.cur.execute("SELECT id, password FROM Users WHERE username = ? LIMIT 1", (username,))
         try:
@@ -40,6 +43,7 @@ class Chat:
             return False
 
         self.id = id_from_db
+        return True
 
     def send_msg(self, to: int, msg: str):
         if self.id == NOT_LOGGED_IN:
@@ -67,6 +71,18 @@ class Chat:
         simplified = [(i[0] == self.id, i[2]) for i in msgs]
         return simplified
 
+    def get_all_users(self):
+        self.cur.execute("SELECT username FROM Users")
+        try:
+            users = self.cur.fetchall()
+        except Exception as e:  # TODO find good exception
+            print("No users yet")
+            return
+
+        user_arr = []
+        for user in users:
+            user_arr.append(user[0])
+        return user_arr
+
     def logout(self):
         self.id = NOT_LOGGED_IN
-
